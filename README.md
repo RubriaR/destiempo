@@ -15,6 +15,9 @@
 *Destiempo* transforms the screen into a sanctuary of fragile signs. By merging the motif of the duck—a symbol of guidance and stability—with the structural disintegration of text, the work reflects the helplessness of witnessing a loved one slip into the "nublazón" (the clouding) of dementia. The interactive animation serves as a metaphor for the desperate attempt to hold onto names, faces, and shared histories before they vanish. The work is a meditation on the impossibility of stopping the clock, where code becomes an act of mourning and an attempt to reconcile the green, vibrant past with the encroaching shadows of the present.
 
 ## Credits
+
+Developed for the course La máquina creadora, led by professor Iván Vergara García, Universidad de Salamanca.
+
 **Concept, Code, and Visual Design:** Rubria Rocha de Luna (with Gemini Pro AI Code Assistance)
 
 **Images:** ChatGPT, 2026
