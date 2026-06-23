@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destiempo</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Georgia', serif; overflow: hidden; height: 100vh; color: #333; }
+        
+        /* Pantallas */
+        #start-screen, #poem-screen { 
+            height: 100vh; width: 100vw; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; position: absolute;
+        }
+
+        #start-screen { background: url('img1.png') center/cover; cursor: pointer; }
+        #poem-screen { background: url('img2.png') center/cover; display: none; opacity: 0; transition: opacity 2s; }
+
+        /* Títulos y Footer */
+        h1 { font-size: 5vmin; margin: 1vh 0; }
+        .footer { font-size: 2vmin; margin-top: 1vh; }
+
+        /* Video responsivo */
+        #video-container { width: 70vw; max-width: 800px; }
+        video { width: 100%; border: 0.5vh solid white; box-shadow: 0 0 2vh rgba(0,0,0,0.3); }
+
+        /* Poema responsivo */
+        #poem-content { 
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            width: 90vw; padding: 2vh; box-sizing: border-box;
+        }
+        
+        /* El contenedor de la oración completa es el que vuela y desaparece */
+        .line-wrapper { 
+            text-align: center;
+            margin: 0.5vh 0; 
+            font-size: 2.2vmin; 
+            white-space: nowrap;
+            perspective: 1000px;
+            transition: transform 4s cubic-bezier(0.3, 0, 0, 1), opacity 3.5s; /* Animación de desplazamiento */
+        }
+        
+        /* Las partes ahora actúan como "alas" ancladas al centro */
+        .wing { 
+            display: inline-block; 
+            transition: transform 4s cubic-bezier(0.3, 0, 0, 1); /* Animación de aleteo */
+        }
+
+        .wing-left { transform-origin: right center; } /* El ancla de la izquierda está en la derecha */
+        .wing-right { transform-origin: left center; } /* El ancla de la derecha está en la izquierda */
+        
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" onclick="startExperience()">
+        <h1>Destiempo</h1>
+        <div id="video-container"><video id="mainVideo" src="videopatos.mp4"></video></div>
+        <div class="footer">© Rubria Rocha de Luna, 2026</div>
+    </div>
+
+    <div id="poem-screen">
+        <h1 id="poem-header">Destiempo</h1>
+        <div id="poem-content"></div>
+        <div class="footer">© Rubria Rocha de Luna, 2026</div>
+    </div>
+
+    <script>
+        const poema = [
+            "El agua de Comal Springs era un espejo limpio,", "un ensayo de vuelo para llevarte lejos, al norte,",
+            "un termómetro para medir tu fuerza fuera de casa.", "Pero el viaje se volvió otra cosa: una luz vibrante",
+            "Ante la sombra que se avecinaba.", "El aleteo de los patos que tanto amabas,",
+            "te mantuvieron atenta y ensimismada.", "Tú los mirabas con el asombro de quien ve oro,",
+            "esos seres que guardabas en figuras de madera,", "de cerámica, de metal, en los platos de la cocina.",
+            "Ahí estaban, vivos, deslizándose entre la corriente,", "mientras nos tomábamos fotos y el tiempo parecía fuerte.",
+            "Cuando las sombras llegaron a Monterrey,", "volviste a nombrar a los patos.",
+            "Hablabas de sus plumas, de sus picos y de su andar pausado.", "Yo te escuchaba de prisa, buscando pistas sin encontrarlas,",
+            "creyendo que era un eco al azar, una idea suelta.", "No vi que estabas habitando el último santuario,",
+            "el nudo exacto donde aún sabías mi nombre.", "Qué impotencia no haber entendido las claves ni detenido el reloj,",
+            "no haber sabido que en tu mente seguíamos en el verdor,", "juntas, mirando los patos, antes de la nublazón."
+        ];
+
+        function startExperience() {
+            const video = document.getElementById('mainVideo');
+            video.play();
+            video.onended = () => {
+                document.getElementById('start-screen').style.display = 'none';
+                const screen = document.getElementById('poem-screen');
+                screen.style.display = 'flex';
+                setTimeout(() => { screen.style.opacity = '1'; startPoem(); }, 100);
+            };
+        }
+
+        function startPoem() {
+            const container = document.getElementById('poem-content');
+            container.innerHTML = '';
+            poema.forEach((texto) => {
+                const words = texto.split(' ');
+                const mid = Math.floor(words.length / 2);
+                const wrapper = document.createElement('div');
+                wrapper.className = 'line-wrapper';
+                
+                // Usamos &nbsp; para garantizar visualmente un espacio irrompible entre las dos mitades
+                wrapper.innerHTML = `
+                    <span class="wing wing-left">${words.slice(0, mid).join(' ')}&nbsp;</span><span class="wing wing-right">${words.slice(mid).join(' ')}</span>
+                `;
+                container.appendChild(wrapper);
+            });
+            animatePoem(0);
+        }
+
+        function animatePoem(index) {
+            const lines = document.querySelectorAll('.line-wrapper');
+            if (index < lines.length) {
+                const delay = (index === 0) ? 6000 : 2000;
+                setTimeout(() => {
+                    const line = lines[index];
+                    const w1 = line.querySelector('.wing-left');
+                    const w2 = line.querySelector('.wing-right');
+                    
+                    // La oración completa vuela hacia arriba y se reduce a lo lejos
+                    const tx = (Math.random() - 0.5) * 800;
+                    const ty = -Math.random() * 500 - 200; // Fuerza el vuelo siempre hacia arriba
+                    const rotZ = (Math.random() - 0.5) * 20; // Ligera inclinación del "pato" al volar
+
+                    line.style.transform = `translate(${tx}px, ${ty}px) rotate(${rotZ}deg) scale(0.3)`;
+                    line.style.opacity = '0';
+                    
+                    // Las partes se curvan simulando alas (V invertida)
+                    w1.style.transform = `rotate(-25deg) skewX(15deg)`;
+                    w2.style.transform = `rotate(25deg) skewX(-15deg)`;
+                    
+                    animatePoem(index + 1);
+                }, delay);
+            } else {
+                setTimeout(resetPoem, 5000);
+            }
+        }
+
+        function resetPoem() {
+            // Reiniciamos el contenedor (posición original)
+            document.querySelectorAll('.line-wrapper').forEach(line => {
+                line.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+                line.style.opacity = '1';
+            });
+            // Reiniciamos las alas (texto plano)
+            document.querySelectorAll('.wing').forEach(w => {
+                w.style.transform = 'rotate(0deg) skewX(0deg)';
+            });
+            
+            setTimeout(() => animatePoem(0), 5000);
+        }
+    </script>
+</body>
+</html>
