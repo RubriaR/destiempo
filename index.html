@@ -62,7 +62,15 @@
     <div id="poem-screen">
         <h1 id="poem-header">Destiempo</h1>
         <div id="poem-content"></div>
-        <div class="footer">© Rubria Rocha de Luna, 2026</div>
+        <div class="footer">
+            <span>© Rubria Rocha de Luna, 2026</span>
+            <!-- Sección agregada para El Eco -->
+            <a href="https://sites.google.com/view/migrarte/el-eco?authuser=0" 
+               id="link-eco" 
+               style="margin-left: 20px; text-decoration: none; color: #333; font-style: italic; opacity: 0; transition: opacity 2s;">
+               El eco
+            </a>
+        </div>
     </div>
 
     <script>
@@ -133,6 +141,9 @@
                     animatePoem(index + 1);
                 }, delay);
             } else {
+                // --- SECCIÓN AGREGADA AQUÍ ---
+                document.getElementById('link-eco').style.opacity = '1';
+                // -----------------------------
                 setTimeout(resetPoem, 5000);
             }
         }
